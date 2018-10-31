@@ -51,6 +51,8 @@ setup(
         'jinja2',
         'python-dateutil',
         'shapely',
+        'pyproj',
+        'pycrs',
     ],
     tests_require=tests_require,
     extras_require=extras_require,

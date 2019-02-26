@@ -39,7 +39,7 @@ before_install:
 - pip install --upgrade pip
 - pip install --progress-bar off coveralls codecov
 # Install pygdal bindings compatible with dpkg based gdal libs
-- pip install pygdal>="$(gdal-config --version)"
+- pip install pygdal=="$(gdal-config --version)"
 - travis_retry pip install --progress-bar off --requirement requirements-test.txt
 - travis_retry pip install -e git+https://github.com/opendatacube/datacube-core.git#egg=datacube
 - travis_retry pip install -e git+https://github.com/GeoscienceAustralia/eo-datasets.git#egg=eodatasets

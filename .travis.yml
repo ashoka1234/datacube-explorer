@@ -33,10 +33,14 @@ before_install:
 # Tests should never use the default datacube config, so add a "honeypot" that fails.
 - cp .travis/honeypot.conf ~/.datacube.conf
 
-- export CPLUS_INCLUDE_PATH="/usr/include/gdal"
-- export C_INCLUDE_PATH="/usr/include/gdal"
-- travis_retry pip install --upgrade pip
-- travis_retry pip install --progress-bar off coveralls codecov
+# Set paths for building python-gdal
+- export CPLUS_INCLUDE_PATH=/usr/include/gdal
+- export C_INCLUDE_PATH=/usr/include/gdal
+- export GDAL_DATA="$(gdal-config --datadir)"
+- pip install --upgrade pip
+- pip install --progress-bar off coveralls codecov
+# Install pygdal bindings compatible with dpkg based gdal libs
+- pip install pygdal>="$(gdal-config --version)"
 - travis_retry pip install --progress-bar off --requirement requirements-test.txt
 - travis_retry pip install -e git+https://github.com/opendatacube/datacube-core.git#egg=datacube
 - travis_retry pip install -e git+https://github.com/GeoscienceAustralia/eo-datasets.git#egg=eodatasets

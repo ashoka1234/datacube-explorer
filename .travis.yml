@@ -16,11 +16,16 @@ addons:
   services:
     - postgresql
   apt:
+      sources:
+      - sourceline: ppa:nextgis/ppa
       packages:
+          - gdal-bin
+          - gdal-data
           - libhdf5-serial-dev
           - libnetcdf-dev
           - libproj-dev
           - libgdal1-dev
+          - libgdal22
           - libudunits2-dev
           - libblas-dev
           - liblapack-dev

@@ -22,11 +22,16 @@ addons:
     packages:
       - gdal-bin
       - gdal-data
-      - libgdal-dev
-      - libgdal20
-      - libudunits2-0
-      # Needed by Postgis
+      - libblas-dev
       - libgdal1-dev
+      - libgdal20
+      - libgdal-dev
+      - libhdf5-serial-dev
+      - liblapack-dev
+      - libnetcdf-dev
+      - libproj-dev
+      - libudunits2-0
+      - libudunits2-dev
       - postgresql-9.6-postgis-2.3
 before_install:
 # Database for the integration tests.

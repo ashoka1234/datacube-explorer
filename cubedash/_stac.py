@@ -130,7 +130,7 @@ def load_datasets(bbox, product, time):
     query['lon'] = Range(bbox[0], bbox[2])
     query['lat'] = Range(bbox[1], bbox[3])
 
-    return _model.STORE.index.datasets.search(limit=MAX_DATASETS, **query)
+    return _model.STORE.index.datasets.search(**query)
 
 
 def stac_datasets_validated(datasets):
@@ -150,80 +150,76 @@ def stac_dataset(dataset):
     """
 
     # Parse extent first return None if fails
-    try:
-        shape, is_valid_extent = _utils.dataset_shape(dataset)
-        if not (shape and is_valid_extent):
-            _LOG.warning('Invalid extent or None extent in dataset %s', dataset.id)
-            return None
-
-        bbox = list(shape.bounds)
-        metadata_doc = dataset.metadata_doc
-
-        # Parse uri (and prefer remote uri s3)
-        uris = dataset.uris
-        remote_uris = [uri for uri in uris if urlparse(uri).scheme == 's3']
-        if remote_uris:
-            uri = remote_uris[0]
-        else:
-            other_uris = [uri for uri in uris if urlparse(uri).scheme != 's3']
-            uri = other_uris[0] if other_uris else ''
-
-        if metadata_doc['grid_spatial']['projection'].get('valid_data', None):
-            geodata = valid_coord_to_geojson(metadata_doc['grid_spatial']['projection']['valid_data'],
-                                             dataset.crs)
-        else:
-            # Compute geometry from geo_ref_points
-            points = [[list(point.values()) for point in
-                       metadata_doc['grid_spatial']['projection']['geo_ref_points'].values()]]
-
-            # last point and first point should be same
-            points[0].append(points[0][0])
-
-            geodata = valid_coord_to_geojson({'type': 'Polygon', 'coordinates': points}, dataset.crs)
-
-        # Convert the date to add time zone.
-        center_dt = dataset.center_time
-        center_dt = center_dt.replace(microsecond=0)
-        time_zone = center_dt.tzinfo
-        if not time_zone:
-            center_dt = center_dt.replace(tzinfo=datetime.timezone.utc).isoformat()
-        else:
-            center_dt = center_dt.isoformat()
-
-        # parent? We will have an empty parent for now
-        stac_item = OrderedDict([
-            ('id', metadata_doc['id']),
-            ('type', 'Feature'),
-            ('bbox', bbox),
-            ('geometry', geodata),
-            ('properties', {
-                'datetime': center_dt,
-                'product_type': metadata_doc['product_type']
-            }),
-            ('links', [
-                {'href': uri, 'rel': 'self'},
-            ]),
-            ('assets', {
-                band_name: {
-                    # "type"? "GeoTIFF" or image/vnd.stac.geotiff; cloud-optimized=true
-                    'href': band_data['path']
-                }
-                for band_name, band_data in metadata_doc['image']['bands'].items()
-            })
-        ])
-
-        cfg = flask.current_app.config.get('STAC_SETTINGS')
-        if cfg:
-            if cfg.get('contact') and cfg['contact'].get('name'):
-                stac_item['properties']['provider'] = cfg['contact']['name']
-            if cfg.get('license') and cfg['license'].get('name'):
-                stac_item['properties']['license'] = cfg['license']['name']
-            if cfg.get('license') and cfg['license'].get('copyright'):
-                stac_item['properties']['copyright'] = cfg['license']['copyright']
-
-    except SystemError:
-        _LOG.warning('Failed processing dataset %s', dataset.id)
+    shape, is_valid_extent = _utils.dataset_shape(dataset)
+    if not (shape and is_valid_extent):
+        _LOG.warning('Invalid extent or None extent in dataset %s', dataset.id)
         return None
+
+    bbox = list(shape.bounds)
+    metadata_doc = dataset.metadata_doc
+
+    # Parse uri (and prefer remote uri s3)
+    uris = dataset.uris
+    remote_uris = [uri for uri in uris if urlparse(uri).scheme == 's3']
+    if remote_uris:
+        uri = remote_uris[0]
+    else:
+        other_uris = [uri for uri in uris if urlparse(uri).scheme != 's3']
+        uri = other_uris[0] if other_uris else ''
+
+    if metadata_doc['grid_spatial']['projection'].get('valid_data', None):
+        geodata = valid_coord_to_geojson(metadata_doc['grid_spatial']['projection']['valid_data'],
+                                         dataset.crs)
+    else:
+        # Compute geometry from geo_ref_points
+        points = [[list(point.values()) for point in
+                   metadata_doc['grid_spatial']['projection']['geo_ref_points'].values()]]
+
+        # last point and first point should be same
+        points[0].append(points[0][0])
+
+        geodata = valid_coord_to_geojson({'type': 'Polygon', 'coordinates': points}, dataset.crs)
+
+    # Convert the date to add time zone.
+    center_dt = dataset.center_time
+    center_dt = center_dt.replace(microsecond=0)
+    time_zone = center_dt.tzinfo
+    if not time_zone:
+        center_dt = center_dt.replace(tzinfo=datetime.timezone.utc).isoformat()
+    else:
+        center_dt = center_dt.isoformat()
+
+    # parent? We will have an empty parent for now
+    stac_item = OrderedDict([
+        ('id', metadata_doc['id']),
+        ('type', 'Feature'),
+        ('bbox', bbox),
+        ('geometry', geodata),
+        ('properties', {
+            'datetime': center_dt,
+            'product_type': metadata_doc['product_type']
+        }),
+        ('links', [
+            {'href': uri, 'rel': 'self'},
+        ]),
+        ('assets', {
+            band_name: {
+                # "type"? "GeoTIFF" or image/vnd.stac.geotiff; cloud-optimized=true
+                'href': band_data['path']
+            }
+            for band_name, band_data in metadata_doc['image']['bands'].items()
+        })
+    ])
+
+    cfg = flask.current_app.config.get('STAC_SETTINGS')
+    if cfg:
+        if cfg.get('contact') and cfg['contact'].get('name'):
+            stac_item['properties']['provider'] = cfg['contact']['name']
+        if cfg.get('license') and cfg['license'].get('name'):
+            stac_item['properties']['license'] = cfg['license']['name']
+        if cfg.get('license') and cfg['license'].get('copyright'):
+            stac_item['properties']['copyright'] = cfg['license']['copyright']
+
     return stac_item
 
 

@@ -17,10 +17,14 @@ addons:
     - postgresql
   apt:
       packages:
+          - gdal-bin
+          - gdal-data
           - libhdf5-serial-dev
           - libnetcdf-dev
           - libproj-dev
+          - libgdal-dev
           - libgdal1-dev
+          - libgdal20
           - libudunits2-dev
           - libblas-dev
           - liblapack-dev
@@ -35,8 +39,10 @@ before_install:
 
 - export CPLUS_INCLUDE_PATH="/usr/include/gdal"
 - export C_INCLUDE_PATH="/usr/include/gdal"
+- export GDAL_DATA="$(gdal-config --datadir)"
 - travis_retry pip install --upgrade pip
 - travis_retry pip install --progress-bar off coveralls codecov
+- travis_retry pip install pygdal>="$(gdal-config --version)"
 - travis_retry pip install --progress-bar off --requirement requirements-test.txt
 - travis_retry pip install -e git+https://github.com/opendatacube/datacube-core.git#egg=datacube
 - travis_retry pip install -e git+https://github.com/GeoscienceAustralia/eo-datasets.git#egg=eodatasets

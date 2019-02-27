@@ -41,10 +41,10 @@ before_install:
 - export CPLUS_INCLUDE_PATH="/usr/include/gdal"
 - export C_INCLUDE_PATH="/usr/include/gdal"
 - export GDAL_DATA="$(gdal-config --datadir)"
-- pip install --upgrade pip
-- pip install --progress-bar off coveralls codecov
-- pip install pygdal>="$(gdal-config --version)"
-- pip install --progress-bar off --requirement requirements-test.txt
+- travis_retry pip install --upgrade pip
+- travis_retry pip install --progress-bar off coveralls codecov
+- travis_retry pip install pygdal>="$(gdal-config --version)"
+- travis_retry pip install --progress-bar off --requirement requirements-test.txt
 - travis_retry pip install -e git+https://github.com/opendatacube/datacube-core.git#egg=datacube
 - travis_retry pip install -e git+https://github.com/GeoscienceAustralia/eo-datasets.git#egg=eodatasets
 - travis_retry pip install -e git+https://github.com/GeoscienceAustralia/digitalearthau.git#egg=digitalearthau

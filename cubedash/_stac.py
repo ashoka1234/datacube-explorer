@@ -130,7 +130,7 @@ def load_datasets(bbox, product, time):
     query['lon'] = Range(bbox[0], bbox[2])
     query['lat'] = Range(bbox[1], bbox[3])
 
-    return _model.STORE.index.datasets.search(**query)
+    return _model.STORE.index.datasets.search(limit=MAX_DATASETS, **query)
 
 
 def stac_datasets_validated(datasets):

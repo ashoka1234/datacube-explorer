@@ -30,7 +30,7 @@ addons:
           - libblas-dev
           - liblapack-dev
           - gfortran
-          - postgresql-9.6-postgis-2.3
+          - postgresql-9.5-postgis-2.3
           - libudunits2-0
 before_install:
 # Database for the integration tests.

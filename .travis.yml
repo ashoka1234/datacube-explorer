@@ -25,6 +25,8 @@ addons:
       - libgdal-dev
       - libgdal20
       - libudunits2-0
+      # Needed by Postgis
+      - libgdal1-dev
       - postgresql-9.6-postgis-2.3
 before_install:
 # Database for the integration tests.

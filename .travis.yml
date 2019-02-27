@@ -12,7 +12,7 @@ cache:
   directories:
   - $HOME/.cache/pip
 addons:
-  postgresql: '9.6'
+  postgresql: '9.5'
   services:
     - postgresql
   apt:

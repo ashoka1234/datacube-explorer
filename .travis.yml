@@ -15,31 +15,28 @@ addons:
   postgresql: '9.6'
   services:
     - postgresql
-
   apt:
-    sources:
-      - sourceline: ppa:nextgis/ppa
-    packages:
-      - gdal-bin
-      - gdal-data
-      - libgdal-dev
-      - libgdal20
-      - libudunits2-0
-      - postgresql-9.6-postgis-2.3
+      packages:
+          - libhdf5-serial-dev
+          - libnetcdf-dev
+          - libproj-dev
+          - libgdal1-dev
+          - libudunits2-dev
+          - libblas-dev
+          - liblapack-dev
+          - gfortran
+          - postgresql-9.6-postgis-2.3
+          - libudunits2-0
 before_install:
 # Database for the integration tests.
 - createdb dea_integration
 # Tests should never use the default datacube config, so add a "honeypot" that fails.
 - cp .travis/honeypot.conf ~/.datacube.conf
 
-# Set paths for building python-gdal
-- export CPLUS_INCLUDE_PATH=/usr/include/gdal
-- export C_INCLUDE_PATH=/usr/include/gdal
-- export GDAL_DATA="$(gdal-config --datadir)"
-- pip install --upgrade pip
-- pip install --progress-bar off coveralls codecov
-# Install pygdal bindings compatible with dpkg based gdal libs
-- pip install pygdal>="$(gdal-config --version)"
+- export CPLUS_INCLUDE_PATH="/usr/include/gdal"
+- export C_INCLUDE_PATH="/usr/include/gdal"
+- travis_retry pip install --upgrade pip
+- travis_retry pip install --progress-bar off coveralls codecov
 - travis_retry pip install --progress-bar off --requirement requirements-test.txt
 - travis_retry pip install -e git+https://github.com/opendatacube/datacube-core.git#egg=datacube
 - travis_retry pip install -e git+https://github.com/GeoscienceAustralia/eo-datasets.git#egg=eodatasets

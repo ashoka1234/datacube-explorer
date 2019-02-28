@@ -25,6 +25,7 @@ addons:
           - libgdal1-dev
           - libgdal-dev
           - libgdal1h
+          - libgdal20
           - libudunits2-dev
           - libblas-dev
           - liblapack-dev

@@ -19,8 +19,8 @@ addons:
       sources:
       - sourceline: ppa:nextgis/ppa
       packages:
-          # - gdal-bin
-          # - gdal-data
+          - gdal-bin
+          - gdal-data
           - libhdf5-serial-dev
           - libnetcdf-dev
           - libproj-dev

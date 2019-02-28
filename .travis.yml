@@ -11,8 +11,6 @@ python:
 cache:
   directories:
   - $HOME/.cache/pip
-services:
-  - docker
 addons:
   postgresql: '9.6'
   apt:
@@ -32,9 +30,8 @@ addons:
           - liblapack-dev
           - gfortran
           - libudunits2-0
+          - postgresql-9.5-postgis-2.3
 before_install:
-- sudo apt-get install -y postgresql-9.5-postgis-2.3
-- sudo service postgresql restart
 # Database for the integration tests.
 - createdb dea_integration
 # Tests should never use the default datacube config, so add a "honeypot" that fails.

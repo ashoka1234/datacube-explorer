@@ -26,6 +26,7 @@ addons:
           - libproj-dev
           - libgdal1-dev
           - libgdal-dev
+          - libgdal1h
           - libudunits2-dev
           - libblas-dev
           - liblapack-dev

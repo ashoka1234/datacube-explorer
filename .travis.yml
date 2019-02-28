@@ -25,6 +25,7 @@ addons:
           - libnetcdf-dev
           - libproj-dev
           - libgdal1-dev
+          - libgdal-dev
           - libudunits2-dev
           - libblas-dev
           - liblapack-dev

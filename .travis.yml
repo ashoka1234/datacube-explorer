@@ -44,7 +44,8 @@ before_install:
 - export LD_LIBRARY_PATH="/usr/lib:/usr/lib/postgresql/9.6/lib:$LD_LIBRARY_PATH"
 # - sudo updatedb
 # - locate libgdal
-- sudo ln -s /usr/lib/x86_64-linux-gnu/libgdal.so /usr/lib/x86_64-linux-gnu/libgdal.so.1
+# - sudo ln -s /usr/lib/x86_64-linux-gnu/libgdal.so /usr/lib/x86_64-linux-gnu/libgdal.so.1
+- sudo ln -s /usr/lib/libgdal.so /usr/lib/libgdal.so.1
 - sudo /sbin/ldconfig
 - travis_retry pip install --upgrade pip
 - travis_retry pip install --progress-bar off coveralls codecov

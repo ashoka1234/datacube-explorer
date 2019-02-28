@@ -11,10 +11,10 @@ python:
 cache:
   directories:
   - $HOME/.cache/pip
+services:
+  - docker
 addons:
   postgresql: '9.6'
-  services:
-    - postgresql
   apt:
       sources:
       - sourceline: ppa:nextgis/ppa
@@ -31,9 +31,10 @@ addons:
           - libblas-dev
           - liblapack-dev
           - gfortran
-          - postgresql-9.6-postgis-2.4
           - libudunits2-0
 before_install:
+- sudo apt-get install -y postgresql-9.5-postgis-2.3
+- sudo service postgresql restart
 # Database for the integration tests.
 - createdb dea_integration
 # Tests should never use the default datacube config, so add a "honeypot" that fails.

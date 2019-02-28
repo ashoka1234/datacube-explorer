@@ -13,24 +13,26 @@ cache:
   - $HOME/.cache/pip
 addons:
   postgresql: '9.6'
+  services:
+    - postgresql
   apt:
       sources:
       - sourceline: ppa:nextgis/ppa
       packages:
-          - gdal-bin
-          - gdal-data
+          # - gdal-bin
+          # - gdal-data
           - libhdf5-serial-dev
           - libnetcdf-dev
           - libproj-dev
           - libgdal1-dev
-          - libgdal-dev
-          - libgdal1i
+          # - libgdal-dev
+          # - libgdal1i
           - libudunits2-dev
           - libblas-dev
           - liblapack-dev
           - gfortran
-          - libudunits2-0
           - postgresql-9.6-postgis-2.3
+          - libudunits2-0
 before_install:
 # Database for the integration tests.
 - createdb dea_integration
@@ -40,8 +42,8 @@ before_install:
 - export CPLUS_INCLUDE_PATH="/usr/include/gdal"
 - export C_INCLUDE_PATH="/usr/include/gdal"
 - export LD_LIBRARY_PATH="/usr/lib:/usr/lib/postgresql/9.6/lib:$LD_LIBRARY_PATH"
-- sudo updatedb
-- locate libgdal
+# - sudo updatedb
+# - locate libgdal
 - sudo ln -s /usr/lib/x86_64-linux-gnu/libgdal.so /usr/lib/x86_64-linux-gnu/libgdal.so.1
 - sudo /sbin/ldconfig
 - travis_retry pip install --upgrade pip

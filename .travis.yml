@@ -16,8 +16,8 @@ addons:
   services:
     - postgresql
   apt:
-#      sources:
-#      - sourceline: ppa:nextgis/ppa
+      sources:
+      - sourceline: ppa:nextgis/ppa
       packages:
           - gdal-bin
           - gdal-data

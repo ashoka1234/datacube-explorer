@@ -229,23 +229,21 @@ def valid_coord_to_geojson(valid_coord, crs):
         lat/lon as in universal format in EPSG:4326
     """
 
-    coords = valid_coord['coordinates']
-    try:
-        albers = Proj(init=str(crs))
-    except RuntimeError:
-        albers = Proj(pycrs.parse.from_unknown_text(str(crs)).to_proj4())
-
-    geo = Proj(init='epsg:4326')
-    for i in range(len(coords[0])):
-        j = transform(albers, geo, coords[0][i][0], coords[0][i][1])
-        coords[0][i] = list(j)
-
-    return {"type": "Polygon", "coordinates": coords}
-
-    # geo = Geometry(valid_coord, crs)
-    # geojson = geo.to_crs(CRS('epsg:4326')).__geo_interface__
+    # coords = valid_coord['coordinates']
+    # try:
+    #     albers = Proj(init=str(crs))
+    # except RuntimeError:
+    #     albers = Proj(pycrs.parse.from_unknown_text(str(crs)).to_proj4())
     #
-    # return geojson
+    # geo = Proj(init='epsg:4326')
+    # for i in range(len(coords[0])):
+    #     j = transform(albers, geo, coords[0][i][0], coords[0][i][1])
+    #     coords[0][i] = list(j)
+    #
+    # return {"type": "Polygon", "coordinates": coords}
+
+    geo = Geometry(valid_coord, crs)
+    return geo.to_crs(CRS('epsg:4326')).__geo_interface__
 
 
 def _compute_bbox(stac_items):
